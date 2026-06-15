@@ -16,15 +16,17 @@ You must have at least 3 tools. The three required tools are listed — add any 
 
 **What it does:**
 <!-- Describe what this tool does in 1–2 sentences -->
+So the user provides a description of what they are looking for including their target price, size and style. This tool takes those 3 descriptions as input and finds the top 3 listing that match those descriptions most closely. It returns the 3 top matches in order of revelance.
 
 **Input parameters:**
 <!-- List each parameter, its type, and what it represents -->
-- `description` (str): ...
-- `size` (str): ...
-- `max_price` (float): ...
+- `description` (str): a brief explanation of the style of the clothing the user wishes to find
+- `size` (str): the desired size of the clothing the user wishes to find
+- `max_price` (float): the highest price the user is interested in spending on the clothing
 
 **What it returns:**
 <!-- Describe the return value — what fields does a result contain? -->
+This tool returns a list of 3 matching listings in order of relevance based on the provided description, size and max_price. The results contain the item's description, cost and condition.
 
 **What happens if it fails or returns nothing:**
 <!-- What should the agent do if no listings match? -->
@@ -35,14 +37,16 @@ You must have at least 3 tools. The three required tools are listed — add any 
 
 **What it does:**
 <!-- Describe what this tool does in 1–2 sentences -->
+This tool takes an item and the wardrobe as input and returns another recommended item to pair it with from the listings. It also gives feedback on how to modify/style the items together.
 
 **Input parameters:**
 <!-- List each parameter, its type, and what it represents -->
-- `new_item` (dict): ...
-- `wardrobe` (dict): ...
+- `new_item` (dict): a list of items provided by the user to be evaluated so that a recommended item can be paired with them
+- `wardrobe` (dict): this list tells the tool where to search for items to recommend to the user
 
 **What it returns:**
 <!-- Describe the return value -->
+This tool returns the descriptions for items that would pair well with the list of items provided by the user as input. The recommended items are found from the lists of wardrobes provided as input to the tool. It also gives advice on how to modify all of the items to pair nicely with each other.
 
 **What happens if it fails or returns nothing:**
 <!-- What should the agent do if the wardrobe is empty or no outfit can be suggested? -->
@@ -53,13 +57,17 @@ You must have at least 3 tools. The three required tools are listed — add any 
 
 **What it does:**
 <!-- Describe what this tool does in 1–2 sentences -->
+This tool takes outfit suggestions and new item suggestions as input and returns ???
+<!-- TODO: -->
 
 **Input parameters:**
 <!-- List each parameter, its type, and what it represents -->
-- `outfit` (...): ...
+- `outfit` (dict): a list of suggested outfits that were output from the "search_listings" tool
+- `new_item` (dict): same input as provided to the "suggest_outfit" tool
 
 **What it returns:**
 <!-- Describe the return value -->
+<!-- TODO: ??? not sure tbh -->
 
 **What happens if it fails or returns nothing:**
 <!-- What should the agent do if the outfit data is incomplete? -->
