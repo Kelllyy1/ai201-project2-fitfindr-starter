@@ -216,6 +216,7 @@ flowchart TD
     class ListingsDB,SessionState storageNode
     class ErrorState,GenericSuggestion,SpecificSuggestion,GenericCaption,BuildPrompt,FinalCaption outputNode
     ```
+    
 
 ---
 
