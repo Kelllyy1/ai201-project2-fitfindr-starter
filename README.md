@@ -166,6 +166,7 @@ python agent.py
 ```
 Example Test Case <!-- From the planning.md file -->
 ![alt text](AdobeExpressPhotos_c565bd1c4bf248719412c5a2471b1487_CopyEdited.png)
+
 ---
 
 ## AI Usage
