@@ -144,9 +144,9 @@ For each tool, describe the specific failure mode you're handling and what the a
 
 | Tool | Failure mode | Agent response |
 |------|-------------|----------------|
-| search_listings | No results match the query | Suggests the user broaden their search. Try a higher max price, omit the size filter, or use a more general description |
-| suggest_outfit | Wardrobe is empty | The create_fit_card falls back to generating a generic caption based on the item details alone, without referencing an outfit |
-| create_fit_card | Outfit input is missing or incomplete | Returns a caption built only from new_item fields (name, price, platform, style_tags) |
+| search_listings | No results match the query | "I couldn't find any listings matching '[description]' under $[max_price] in size [size]." Suggests the user broaden their search. Try a higher max price, omit the size filter, or use a more general description |
+| suggest_outfit | Wardrobe is empty | "I wasn't able to generate an outfit suggestion for this item." The create_fit_card falls back to generating a generic caption based on the item details alone, without referencing an outfit |
+| create_fit_card | Outfit input is missing or incomplete | "Here's a caption based on the item itself." Returns a caption built only from new_item fields (name, price, platform, style_tags) |
 
 ---
 
