@@ -135,6 +135,16 @@ If the outfit is incomplete or empty, the tool should return a descriptive error
 **How does information from one tool get passed to the next?**
 <!-- Describe how your agent stores and accesses state within a session. What data is tracked? How is it passed between tool calls? -->
 
+The agent uses a single session dict initialized at the start of each run. It stores the original query, parsed parameters (description, size, max_price), and the output of each tool call. Each tool writes its result into the session before the next tool is called:
+
+- `session["search_results"]` — filled by search_listings, read to select session["selected_item"]
+- `session["selected_item"]` — the top result, passed directly into suggest_outfit
+- `session["outfit_suggestion"]` — filled by suggest_outfit, passed directly into create_fit_card
+- `session["fit_card"]` — filled by create_fit_card, returned to the user
+- `session["error"]` — set by search_listings if no results are found; causes early return before any LLM calls are made
+
+No tool re-prompts the user or fetches data independently — everything flows forward through the session dict.
+
 ---
 
 <!-- ** -->
@@ -161,7 +171,7 @@ For each tool, describe the specific failure mode you're handling and what the a
      sketch are all fine. You'll share this diagram with an AI tool when asking it to implement
      the planning loop and each individual tool. -->
 
- ```mermaid
+```mermaid
 
 ---
 config:
