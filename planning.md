@@ -159,8 +159,9 @@ For each tool, describe the specific failure mode you're handling and what the a
      sketch are all fine. You'll share this diagram with an AI tool when asking it to implement
      the planning loop and each individual tool. -->
 
- ```
-    ---
+ ```mermaid
+
+---
 config:
   layout: elk
 ---
@@ -215,7 +216,8 @@ flowchart TD
     class ResultsCheck,WardrobeCheck,ValidateOutfit decisionNode
     class ListingsDB,SessionState storageNode
     class ErrorState,GenericSuggestion,SpecificSuggestion,GenericCaption,BuildPrompt,FinalCaption outputNode
-    ```
+
+```
 
 ---
 
