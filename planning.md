@@ -52,6 +52,7 @@ This tool returns a string containing a suggestion for items that would pair wel
 **What happens if it fails or returns nothing:**
 <!-- What should the agent do if the wardrobe is empty or no outfit can be suggested? -->
 If the wardrobe is empty it returns general styling advice for the item instead of returning an empty string. It does not return an empty string and it does not raise an exception.
+
 ---
 
 ### Tool 3: create_fit_card
@@ -136,15 +137,16 @@ If the outfit is incomplete or empty, the tool should return a descriptive error
 
 ---
 
+<!-- ** -->
 ## Error Handling
 
 For each tool, describe the specific failure mode you're handling and what the agent does in response.
 
 | Tool | Failure mode | Agent response |
 |------|-------------|----------------|
-| search_listings | No results match the query | |
-| suggest_outfit | Wardrobe is empty | |
-| create_fit_card | Outfit input is missing or incomplete | |
+| search_listings | No results match the query | Suggests the user broaden their search. Try a higher max price, omit the size filter, or use a more general description |
+| suggest_outfit | Wardrobe is empty | The create_fit_card falls back to generating a generic caption based on the item details alone, without referencing an outfit |
+| create_fit_card | Outfit input is missing or incomplete | Returns a caption built only from new_item fields (name, price, platform, style_tags) |
 
 ---
 
@@ -221,6 +223,7 @@ flowchart TD
 
 ---
 
+<!-- ** -->
 ## AI Tool Plan
 
 <!-- For each part of the implementation below, describe:
@@ -234,15 +237,32 @@ flowchart TD
      search_listings() using load_listings() from the data loader — then test it against 3 queries
      before trusting it" is a plan. -->
 
+Tool 1 — search_listings()
+
+I'll use Claude. I'll give it the search_listings spec from ## Planning Loop (inputs: description, max_price, size; return value: sorted list of listing dicts; failure mode: empty results → set session error and return early) plus the listings schema (fields: id, title, description, category, style_tags, size, condition, price, colors, brand, platform). I'll ask it to implement the function using load_listings() from the data loader, filtering by max_price and size, scoring by keyword overlap with description, and dropping zero-score results. Before running it, I'll verify the code handles all three filter parameters, sorts descending by score, and hits the early-return branch when results are empty. I'll test it with three queries: one that returns results, one where the price filters everything out, and one with a description that matches nothing.
+
+
+Tool 2 — suggest_outfit()
+
+I'll use Claude. I'll give it the suggest_outfit spec from ## Planning Loop (inputs: new_item, wardrobe; return value: outfit suggestion string; branches: empty wardrobe → generic styling ideas, non-empty → named wardrobe pieces) and the suggest_outfit node from my Architecture diagram showing the two LLM prompt paths. I'll ask it to generate the function with both branches and a prompt template for each. Before using it, I'll check that the empty-wardrobe branch doesn't reference any wardrobe items and that the non-empty branch names specific pieces from the wardrobe dict. I'll test it with an empty wardrobe and a wardrobe with 3 items.
+
+
+Tool 3 — create_fit_card()
+
+I'll use Claude. I'll give it the create_fit_card spec from ## Planning Loop (inputs: outfit, new_item; validation: strip whitespace before using outfit string; output: 2–4 sentence OOTD caption; style requirements: casual tone, mentions item name/price/platform once each, higher LLM temperature) and the corresponding node from my Architecture diagram showing the validation branch. I'll ask it to implement the function including the fallback caption when outfit is empty or whitespace-only. Before using it, I'll verify the prompt includes item name, price, and platform, that temperature is set above the default, and that the fallback path doesn't reference the outfit string. I'll test it with a valid outfit, a whitespace-only outfit string, and an empty string.
+
 **Milestone 3 — Individual tool implementations:**
 
 **Milestone 4 — Planning loop and state management:**
 
 ---
 
+<!-- ** -->
 ## A Complete Interaction (Step by Step)
 
-Write out what a full user interaction looks like from start to finish — tool call by tool call. Use a specific example query.
+<!-- Write out what a full user interaction looks like from start to finish — tool call by tool call. Use a specific example query. -->
+
+FitFindr takes a natural-language query and runs it through three tools in sequence: search_listings finds and ranks thrifted items by relevance and price, suggest_outfit uses the top result and the user's wardrobe to generate a styling suggestion, and create_fit_card turns that into a shareable OOTD caption. Each tool passes its output directly into the next as a session variable, so the planning loop always knows where it is in the sequence. If search_listings finds nothing, the agent exits early with a specific message rather than calling the remaining tools with bad data.
 
 **Example user query:** "I'm looking for a vintage graphic tee under $30. I mostly wear baggy jeans and chunky sneakers. What's out there and how would I style it?"
 
